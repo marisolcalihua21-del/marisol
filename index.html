@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segundo parcial</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="shadow">
+        <div class="container-logo">
+            <img src="dave_00.jpg" alt="">
+        </div>
+        <div>
+            <button id="btn-dark-mode">Dark mode</button>
+        </div>
+    </header>
+
+    <section class="main-container">
+        <p>Activite theory Team</p>
+        <h1>Rick and Martin</h1>
+        <span> Television & Film / Nominee</span>
+    </section>
+
+
+    <div class="search">
+        <input class="shadow" type="text" placeholder="buscar personaje">
+        <button>Buscar</button>
+    </div>
+
+    <section id="personajes" class="personaje">
+
+    </section>
+    <div>
+        <button id="btn-load-more">
+            cargar mas personajes
+        </button>
+    </div>
+
+</body>
+
+<script>
+    let info_pages= null
+    function renderLoader(){
+        const contenedor= document.getElementById('personajes')
+        const loader= document.createElement('div')
+        loader.setAttribute('id','loader')
+        loader.appendChild(document.createTextNode('Cargando....'))
+        contenedor.appendChild(loader)
+    }
+    function hiddenLoader(){
+        const contenedor = document.getElementById('personajes')
+        const loader=document.getElementById('loader')
+        contenedor.removeChild(loader)
+    }
+     async function obtener_personajes(page=1){
+        const url = "https://rickandmortyapi.com/api/character";
+        renderLoader()
+        const response = await fetch(url)
+        .then(res => res.json())
+        .catch(err => console.log(err));
+        const personajes = response.results;
+        info_pages= response?.info
+        console.log('variable response',info_pages);
+        console.log('array',personajes);
+        const contenedor = document.getElementById('personajes')
+        personajes.forEach((element) => {
+            const contenedor_personaje = document.createElement('div');
+            const imagen = document.createElement('img');
+            imagen.src = element.image
+            contenedor_personaje.appendChild(imagen)
+            contenedor.appendChild(contenedor_personaje)
+        });
+        hiddenLoader()
+    }
+    function loadMore(){
+        console.log('load more');
+    }
+    
+    const btn = document.getElementById('btn-load-more')
+    btn.addEventListener('click',loadMore);
+    obtener_personajes();
+    const darkModebutton=document.getElementById('btn-dark-mode');
+    function toggleDarkMode(){
+        document.body.classList.toggle('dark-mode');
+    }
+    darkModebutton.addEventListener('click',toggleDarkMode)
+
+
+    function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+
+    const darkModeButton = document.getElementById('btn-dark-mode');
+    
+    if (document.body.classList.contains('dark-mode')) {
+        darkModeButton.innerText = 'Activado';
+    } else {
+        darkModeButton.innerText = 'Desactivado';
+    }
+}
+
+
+</script>
+
+</html>
